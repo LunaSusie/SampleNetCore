@@ -1,0 +1,13 @@
+﻿@model OptionsBindConfig.Class
+
+<h2>Index</h2>
+<h4>ClassNo:@Model.ClassNO</h4>
+<h4>ClassNo:@Model.ClassDesc</h4>
+<h3>Students:</h3>
+<div>
+    @foreach (var student in Model.Students)
+    {
+        <span>Name:@student.Name</span>
+        <span>Name:@student.Age</span>
+    }
+</div>
