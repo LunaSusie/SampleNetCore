@@ -1,0 +1,45 @@
+[
+  {
+    "outputFileName": "wwwroot/css/all.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css",
+      "node_modules/bootstrap/dist/css/bootstrap.css"
+    ]
+    //"inputFiles": [ "wwwroot/**/*(*.css|!(*.min.css))" ],
+  },
+  {
+    "outputFileName": "wwwroot/js/all.min.js",
+    "inputFiles": [
+      "node_modules/bootstrap/dist/js/bootstrap.js",
+      "node_modules/jquery-slim/dist//jquery-slim.js",
+      "node_modules/popper.js/dist/js/popper.js",
+      "wwwroot/js/site.js"
+    ]
+  },
+  //开发css
+  {
+    "outputFileName": "wwwroot/css/bootstrap.css",
+    "inputFiles": [
+      "node_modules/bootstrap/dist/css/bootstrap.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    },
+    "sourceMap": true
+  },
+  //开发js
+  {
+    "outputFileName": "wwwroot/js/vender.js",
+    "inputFiles": [
+      "node_modules/bootstrap/dist/js/bootstrap.js",
+      "node_modules/jquery-slim/dist//jquery-slim.js",
+      "node_modules/popper.js/dist/js/popper.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    },
+    "sourceMap": true
+  }
+]
