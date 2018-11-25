@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using MvcDemo.Service;
 using MvcDemo.Service.MemoryService;
@@ -57,6 +58,16 @@ namespace MvcDemo
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //反向代理ForwardedHeaders
+            // if (env.IsProduction())
+            // {
+            //       app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //    {
+            //     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedFor
+            //  });
+            // }
+
             //静态页面
             app.UseStaticFiles();
             //使用状态码页面
