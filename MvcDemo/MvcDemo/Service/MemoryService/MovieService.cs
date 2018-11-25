@@ -31,7 +31,7 @@ namespace MvcDemo.Service.MemoryService
             });
             _movies.Add(new Movie
             {
-                CinemaId = 1,
+                CinemaId = 2,
                 Id = 3,
                 Name = "Fight",
                 ReleaseTime = new DateTime(2018, 12, 3),

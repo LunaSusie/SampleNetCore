@@ -32,7 +32,7 @@ namespace MvcDemo.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Add(Movie model)
+        public async Task<IActionResult> Create(Movie model)
         {
             if (ModelState.IsValid)
             {

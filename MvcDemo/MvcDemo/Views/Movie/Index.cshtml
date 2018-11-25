@@ -3,6 +3,9 @@
 
 <div class="container">
     <div class="row">
+        @await Component.InvokeAsync("MovieCount",@Model.FirstOrDefault().Id)
+    </div>
+    <div class="row">
         <table class="table">
             <thead class="thead-dark">
             <tr>
@@ -15,7 +18,7 @@
             </thead>
             <tbody>
             @Html.DisplayForModel()
-            </tbody>   
+            </tbody>
         </table>
         <a asp-action="Create">新增</a>
     </div>
