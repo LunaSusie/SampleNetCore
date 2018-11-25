@@ -13,6 +13,8 @@ using Blog.Infrastructure.Repository;
 using Blog.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Blog.Host.Extensions;
 
 namespace Blog.Host
 {
@@ -47,7 +49,7 @@ namespace Blog.Host
 
             services.AddDbContext<BlogDbContext>(options =>
             {
-                options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BlogDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
 
@@ -74,10 +76,13 @@ namespace Blog.Host
         }
 
        
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app,ILoggerFactory loggerFactory)
         {
             //异常页面
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
+            
+            //全局异常处理
+            app.UseBlogExceptionHandler(loggerFactory);
 
             //官方建议的生产https方式
             app.UseHsts();
