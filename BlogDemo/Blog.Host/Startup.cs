@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Blog.Infrastructure.DataBase;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Blog.Host
 {
@@ -26,10 +29,23 @@ namespace Blog.Host
     /// </summary>
     public class StartupDevelopment
     {
+        private readonly IConfiguration Configuration;
+
+        public StartupDevelopment(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             //注入mvc
             services.AddMvc();
+
+            services.AddDbContext<BlogDbContext>(options =>
+            {
+                options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BlogDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+            });
+
 
             //http重定向https配置
             services.AddHttpsRedirection(options =>

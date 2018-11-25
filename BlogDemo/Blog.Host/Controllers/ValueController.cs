@@ -2,6 +2,7 @@
 
 namespace Blog.Host.Controllers
 {
+    [Route("api/[Controller]")]
     public class ValueController : Controller
     {
         // GET
