@@ -22,6 +22,11 @@ namespace Blog.Infrastructure.Repository
             return _blogDbContext.Posts.ToList();
         }
 
+        public void Create(Post entity)
+        {
+            _blogDbContext.Posts.Add(entity);
+        }
+
         public async Task<IEnumerable<Post>> GetAllAsync()
         {
             return await _blogDbContext.Posts.ToListAsync();

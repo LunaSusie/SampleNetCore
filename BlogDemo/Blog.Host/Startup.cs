@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Blog.Infrastructure.DataBase;
 using Blog.Infrastructure.Repository;
+using Blog.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -68,6 +69,7 @@ namespace Blog.Host
             });
 
             services.AddScoped<IRepository<Post>, PostRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }
 
