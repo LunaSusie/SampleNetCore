@@ -69,7 +69,6 @@ namespace MvcDemo
             });
         }
     }
-    // Startup class to use in the Production environment
     public class StartupProduction
     {
         public void ConfigureServices(IServiceCollection services)
