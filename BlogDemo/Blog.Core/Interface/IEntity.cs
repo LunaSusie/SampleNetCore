@@ -1,4 +1,4 @@
-﻿namespace Blog.Core.Entities
+﻿namespace Blog.Core.Interface
 {
     public interface IEntity<T>
     {

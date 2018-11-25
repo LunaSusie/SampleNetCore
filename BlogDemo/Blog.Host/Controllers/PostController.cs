@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Blog.Core.Entities;
+using Blog.Core.Interface;
 using Blog.Infrastructure.DataBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,17 +10,18 @@ namespace Blog.Host.Controllers
     [Route("api/[Controller]")]
     public class PostController : Controller
     {
-        private readonly BlogDbContext _blogDbContext;
+        private readonly IRepository<Post> _postRepository;
 
-        public PostController(BlogDbContext blogDbContext)
+        public PostController(IRepository<Post> postRepository)
         {
-            _blogDbContext = blogDbContext;
+            _postRepository = postRepository;
         }
+
 
         // GET
         public async Task<IActionResult> Index()
         {
-            var posts=await _blogDbContext.Posts.ToListAsync();
+            var posts=await _postRepository.GetAllAsync();
             return Ok(posts);
         }
     }

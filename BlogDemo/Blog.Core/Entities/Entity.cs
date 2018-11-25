@@ -1,4 +1,6 @@
-﻿namespace Blog.Core.Entities
+﻿using Blog.Core.Interface;
+
+namespace Blog.Core.Entities
 {
     public abstract class Entity:IEntity<int>
     {

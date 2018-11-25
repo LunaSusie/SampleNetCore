@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Core.Entities;
+using Blog.Core.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Blog.Infrastructure.DataBase;
+using Blog.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -63,6 +66,9 @@ namespace Blog.Host
                 options.ExcludedHosts.Add("example.com");
                 options.ExcludedHosts.Add("www.example.com");
             });
+
+            services.AddScoped<IRepository<Post>, PostRepository>();
+
         }
 
        
