@@ -13,12 +13,14 @@ namespace MvcDemo.Service.MemoryService
         {
             _cinemas.Add(new Cinema
             {
+                Id=1,
                 Name = "City Cinema",
                 Location = "Road ABC,NO.512",
                 Capacity = 100,
             });
             _cinemas.Add(new Cinema
             {
+                Id=2,
                 Name = "Fly Cinema",
                 Location = "Road Hello,NO.1024",
                 Capacity = 500,
@@ -37,9 +39,9 @@ namespace MvcDemo.Service.MemoryService
             return Task.Run(() => _cinemas.AsEnumerable());
         }
 
-        public Task<Cinema> GetByIdAsync(int Id)
+        public Task<Cinema> GetByIdAsync(int id)
         {
-            return Task.Run(() => _cinemas.FirstOrDefault(c=>c.Id==Id));
+            return Task.Run(() => _cinemas.FirstOrDefault(c=>c.Id==id));
         }
     }
 }

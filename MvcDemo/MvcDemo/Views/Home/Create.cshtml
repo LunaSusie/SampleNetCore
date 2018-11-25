@@ -1,0 +1,28 @@
+﻿@model MvcDemo.Models.Cinema
+<div class="container">
+    <form asp-action="Create" method="post">
+        <div class="form-group row">
+            <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Name" class="form-control" placeholder="请输入影院名称">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Location" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Location" class="form-control" placeholder="请输入影院地址">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Capacity" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Capacity" class="form-control" placeholder="请输入影院容纳人数">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+       </div>
+    </form>
+</div>

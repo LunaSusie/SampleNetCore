@@ -25,7 +25,7 @@ namespace MvcDemo.Controllers
             ViewBag.cinemaId = cinemaId;
             return View(await _movieService.GetByCinemaAsync(cinemaId));
         }
-        public IActionResult Add(int cinemaId)
+        public IActionResult Create(int cinemaId)
         {
             ViewBag.Title = "添加电影";
             return View(new Movie {CinemaId = cinemaId});
@@ -40,6 +40,15 @@ namespace MvcDemo.Controllers
             }
 
             return RedirectToAction("Index",new {cinemaId=model.Id});
+        }
+        /// <summary>
+        /// 临时action
+        /// </summary>
+        /// <param name="cinemaId"></param>
+        /// <returns></returns>
+        public IActionResult Edit(int cinemaId)
+        {
+            return RedirectToAction("Index");
         }
     }
 }

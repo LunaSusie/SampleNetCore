@@ -62,11 +62,6 @@ namespace MvcDemo
             //使用状态码页面
             app.UseStatusCodePages();
             app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}"); });
-
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
         }
     }
     public class StartupProduction
