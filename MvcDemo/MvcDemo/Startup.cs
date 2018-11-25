@@ -13,27 +13,73 @@ namespace MvcDemo
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //注入mvc
+            services.AddMvc();
             //注入services
             services.AddSingleton<ICinemaService, CinemaService>();
             services.AddSingleton<IMovieService, MovieService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            //静态页面
+            app.UseStaticFiles();
+            //使用状态码页面
+            app.UseStatusCodePages();
+            app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}"); });
 
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!");
             });
+        }
+    }
+    public class StartupDevelopment
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //注入mvc
+            services.AddMvc();
+            //注入services
+            services.AddSingleton<ICinemaService, CinemaService>();
+            services.AddSingleton<IMovieService, MovieService>();
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            //静态页面
+            app.UseStaticFiles();
+            //使用状态码页面
+            app.UseStatusCodePages();
+            app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}"); });
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
+        }
+    }
+    // Startup class to use in the Production environment
+    public class StartupProduction
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            
         }
     }
 }
