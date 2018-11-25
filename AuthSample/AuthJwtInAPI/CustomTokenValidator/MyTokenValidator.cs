@@ -16,8 +16,10 @@ namespace AuthJwtInAPI.CustomTokenValidator
         {
             validatedToken = null;
             var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
-            if (securityToken == "abcdefg！")
+            
+            if (securityToken == "lunalunaluna")
             {  
+                //返回下面的claim说明验证成功
                 identity.AddClaim(new Claim("Name", "luna"));
                 identity.AddClaim(new Claim("Role", "admin"));
             }

@@ -48,18 +48,18 @@ namespace AuthJwtInAPI
 
                 //自定义jwt
                 //1.清空默认的验证,添加自定义验证
-//                options.SecurityTokenValidators.Clear();
-//                options.SecurityTokenValidators.Add(new MyTokenValidator());
-//                //2.设定OnMessageReceived事件
-//                options.Events = new JwtBearerEvents()
-//                {
-//                    OnMessageReceived = context =>
-//                    {
-//                        var token = context.Request.Headers["MyToken"];
-//                        context.Token = token.FirstOrDefault();
-//                        return Task.CompletedTask;
-//                    }
-//                };
+                options.SecurityTokenValidators.Clear();
+                options.SecurityTokenValidators.Add(new MyTokenValidator());
+                //2.设定OnMessageReceived事件
+                options.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Headers["MyToken"];
+                        context.Token = token.FirstOrDefault();
+                        return Task.CompletedTask;
+                    }
+                };
 
             });
 
