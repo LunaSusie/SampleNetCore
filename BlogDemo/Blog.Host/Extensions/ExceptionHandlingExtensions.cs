@@ -8,7 +8,7 @@ namespace Blog.Host.Extensions
 {
     public static class ExceptionHandlingExtensions
     {
-        public static void UseBlogExceptionHandler(this IApplicationBuilder app,LoggerFactory loggerFactory)
+        public static void UseBlogExceptionHandler(this IApplicationBuilder app,ILoggerFactory loggerFactory)
         {
             app.UseExceptionHandler(builder =>
             {

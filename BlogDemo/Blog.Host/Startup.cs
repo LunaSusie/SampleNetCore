@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Blog.Core.Entities;
 using Blog.Core.Interface;
 using Microsoft.AspNetCore.Builder;
@@ -73,6 +74,7 @@ namespace Blog.Host
             services.AddScoped<IRepository<Post>, PostRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddAutoMapper();
         }
 
        
