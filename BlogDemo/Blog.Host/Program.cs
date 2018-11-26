@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace Blog.Host
 {
@@ -17,7 +19,16 @@ namespace Blog.Host
     {
         public static void Main(string[] args)
         {
-           var host= CreateWebHostBuilder(args).Build();
+            //serilog配置
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(Path.Combine("logs",@"log.text"),rollingInterval:RollingInterval.Day)
+                .CreateLogger();
+
+            var host= CreateWebHostBuilder(args).Build();
             DataSeed(host);
             host.Run();
         }
@@ -46,7 +57,9 @@ namespace Blog.Host
             var assemblyName = typeof(Startup).GetTypeInfo().Assembly.FullName;
 
             return WebHost.CreateDefaultBuilder(args)
-                .UseStartup(assemblyName);
+                .UseStartup(assemblyName)
+                // 使用Serilog
+                .UseSerilog();
         }
     }
 }

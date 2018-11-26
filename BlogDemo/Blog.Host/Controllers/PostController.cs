@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Core.Entities;
 using Blog.Core.Interface;
-using Blog.Infrastructure.DataBase;
 using Blog.Infrastructure.Resources;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Blog.Host.Controllers
 {
@@ -18,12 +16,14 @@ namespace Blog.Host.Controllers
         private readonly IRepository<Post> _postRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<PostController> _logger;
  
-        public PostController(IRepository<Post> postRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public PostController(IRepository<Post> postRepository, IUnitOfWork unitOfWork, IMapper mapper, ILogger<PostController> logger)
         {
             _postRepository = postRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
@@ -32,6 +32,7 @@ namespace Blog.Host.Controllers
         {
             var posts=await _postRepository.GetAllAsync();
             var postsResource = _mapper.Map<IEnumerable<Post>, IEnumerable<PostResource>>(posts);
+            _logger.LogError("all posts...");
             return Ok(postsResource);
         }
 
