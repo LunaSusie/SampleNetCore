@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Blog.Host.Extensions;
+using Blog.Infrastructure.Resources;
+using FluentValidation;
 
 namespace Blog.Host
 {
@@ -70,11 +72,14 @@ namespace Blog.Host
                 options.ExcludedHosts.Add("example.com");
                 options.ExcludedHosts.Add("www.example.com");
             });
-
+            //Repository注入
             services.AddScoped<IRepository<Post>, PostRepository>();
+            //UnitOfWork注入
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            //AutoMapper注入
             services.AddAutoMapper();
+            //FluentValidation注入
+            services.AddTransient<IValidator<PostResource>, PostResourceValidator>();
         }
 
        
