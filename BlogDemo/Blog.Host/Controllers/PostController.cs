@@ -10,7 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Blog.Host.Controllers
 {
-    [Route("api/[Controller]")]
+    /// <summary>
+    /// RestApi
+    /// 内容协商输入：Content-Type,服务器接受类型，默认application/xml
+    /// 内容协商输出：Accept，客户端接收类型
+    /// 
+    /// </summary>
+    [Route("api/posts")]
     public class PostController : Controller
     {
         private readonly IRepository<Post> _postRepository;
@@ -25,15 +31,31 @@ namespace Blog.Host.Controllers
             _mapper = mapper;
             _logger = logger;
         }
-
-
-        // GET
-        public async Task<IActionResult> Index()
+        /// <summary>
+        /// rest api 规范,集合数据为空，返回空数组即可
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
             var posts=await _postRepository.GetAllAsync();
             var postsResource = _mapper.Map<IEnumerable<Post>, IEnumerable<PostResource>>(posts);
-            _logger.LogError("all posts...");
+            _logger.LogInformation("all posts...");
             return Ok(postsResource);
+        }
+        /// <summary>
+        /// rest api 规范，单条数据有返回数据，没有返回404(not found)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var post = await _postRepository.GetByIdAsync(id);
+            if (post == null) return NotFound();
+            var postResource = _mapper.Map<Post, PostResource>(post);
+            _logger.LogInformation("one posts...");
+            return Ok(postResource);
         }
 
         [HttpPost]

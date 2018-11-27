@@ -19,7 +19,7 @@ namespace Blog.Host
     {
         public static void Main(string[] args)
         {
-            //serilog配置
+            //SeriLog配置
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -58,7 +58,6 @@ namespace Blog.Host
 
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup(assemblyName)
-                // 使用Serilog
                 .UseSerilog();
         }
     }

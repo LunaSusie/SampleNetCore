@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Core.Entities;
 using Blog.Core.Interface;
@@ -18,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Blog.Host.Extensions;
 using Blog.Infrastructure.Resources;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Blog.Host
 {
@@ -38,21 +36,27 @@ namespace Blog.Host
     /// </summary>
     public class StartupDevelopment
     {
-        private readonly IConfiguration Configuration;
+        private readonly IConfiguration _configuration;
 
         public StartupDevelopment(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             //注入mvc
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                //内容协商，请求的内容类型不支持返回406
+                options.ReturnHttpNotAcceptable = true;
+                //内容协商，添加xml支持
+                options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            });
 
             services.AddDbContext<BlogDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
             });
 
 
@@ -63,6 +67,53 @@ namespace Blog.Host
                 options.HttpsPort = 5001;
             });
 
+            //Repository注入
+            services.AddScoped<IRepository<Post>, PostRepository>();
+            //UnitOfWork注入
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //AutoMapper注入
+            services.AddAutoMapper();
+            //FluentValidation注入
+            services.AddTransient<IValidator<PostResource>, PostResourceValidator>();
+        }
+
+       
+        public void Configure(IApplicationBuilder app,ILoggerFactory loggerFactory)
+        {
+            
+            //全局异常处理
+            app.UseBlogExceptionHandler(loggerFactory);
+
+            //https重定向中间件
+            app.UseHttpsRedirection();
+ 
+            //mvc中间件
+            app.UseMvc();
+        }
+    }
+    /// <summary>
+    /// 生产环境
+    /// </summary>
+    public class StartupProduction
+    {
+        private readonly IConfiguration _configuration;
+
+        public StartupProduction(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //注入mvc
+            services.AddMvc();
+
+            services.AddDbContext<BlogDbContext>(options =>
+            {
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            });
+
+
+     
             //官方建议的生产https方式
             services.AddHsts(options =>
             {
@@ -82,38 +133,21 @@ namespace Blog.Host
             services.AddTransient<IValidator<PostResource>, PostResourceValidator>();
         }
 
-       
-        public void Configure(IApplicationBuilder app,ILoggerFactory loggerFactory)
+
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             //异常页面
             //app.UseDeveloperExceptionPage();
-            
+
             //全局异常处理
             app.UseBlogExceptionHandler(loggerFactory);
+
 
             //官方建议的生产https方式
             app.UseHsts();
 
-            //https重定向中间件
-            app.UseHttpsRedirection();
-
             //mvc中间件
             app.UseMvc();
-        }
-    }
-    /// <summary>
-    /// 生产环境
-    /// </summary>
-    public class StartupProduction
-    {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            
-        }
-
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-           
         }
     }
 }

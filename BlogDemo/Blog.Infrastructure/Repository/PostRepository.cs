@@ -22,6 +22,14 @@ namespace Blog.Infrastructure.Repository
             return _blogDbContext.Posts.ToList();
         }
 
+        public Post GetById(int id)
+        {
+            return _blogDbContext.Posts.FirstOrDefault(p => p.Id == id);
+        }
+        public Task<Post> GetByIdAsync(int id)
+        {
+            return _blogDbContext.Posts.FirstOrDefaultAsync(p => p.Id == id);
+        }
         public void Create(Post entity)
         {
             _blogDbContext.Posts.Add(entity);
@@ -31,5 +39,7 @@ namespace Blog.Infrastructure.Repository
         {
             return await _blogDbContext.Posts.ToListAsync();
         }
+
+       
     }
 }
