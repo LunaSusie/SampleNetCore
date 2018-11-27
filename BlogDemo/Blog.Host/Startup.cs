@@ -16,6 +16,9 @@ using Blog.Host.Extensions;
 using Blog.Infrastructure.Resources;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Blog.Host
 {
@@ -75,6 +78,13 @@ namespace Blog.Host
             services.AddAutoMapper();
             //FluentValidation注入
             services.AddTransient<IValidator<PostResource>, PostResourceValidator>();
+            //urlHelper注入
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(factory =>
+            {
+                var actionContext = factory.GetService<IActionContextAccessor>().ActionContext;
+                return new UrlHelper(actionContext);
+            });
         }
 
        

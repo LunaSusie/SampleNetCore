@@ -35,9 +35,12 @@ namespace Blog.Infrastructure.Repository
             _blogDbContext.Posts.Add(entity);
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<PaginatedList<Post>> GetAllAsync(PostQueryParameter postQueryParameter)
         {
-            return await _blogDbContext.Posts.ToListAsync();
+            var query = _blogDbContext.Posts.OrderBy(x => x.Id);
+            var count = await query.CountAsync();
+            var data= await query.Skip(postQueryParameter.PageIndex * postQueryParameter.PageSize).Take(postQueryParameter.PageSize).ToListAsync();
+            return new PaginatedList<Post>(postQueryParameter.PageIndex, postQueryParameter.PageSize, count, data);
         }
 
        

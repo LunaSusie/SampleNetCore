@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blog.Core.Entities;
 
 namespace Blog.Core.Interface
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T :class
     {
         IEnumerable<T> GetAll();
         T GetById(int id);
         void Create(T entity);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<PaginatedList<T>> GetAllAsync(PostQueryParameter postQueryParameter);
         Task<T> GetByIdAsync(int id);
 
     }

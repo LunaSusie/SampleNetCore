@@ -7,6 +7,8 @@ using Blog.Core.Interface;
 using Blog.Infrastructure.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Blog.Host.Controllers
 {
@@ -23,25 +25,45 @@ namespace Blog.Host.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<PostController> _logger;
+        private readonly IUrlHelper _urlhelper;
  
-        public PostController(IRepository<Post> postRepository, IUnitOfWork unitOfWork, IMapper mapper, ILogger<PostController> logger)
+        public PostController(IRepository<Post> postRepository, IUnitOfWork unitOfWork, IMapper mapper, ILogger<PostController> logger, IUrlHelper urlhelper)
         {
             _postRepository = postRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _urlhelper = urlhelper;
         }
         /// <summary>
         /// rest api 规范,集合数据为空，返回空数组即可
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet(Name ="posts")]
+        public async Task<IActionResult> Get(PostQueryParameter postQueryParameter)
         {
-            var posts=await _postRepository.GetAllAsync();
-            var postsResource = _mapper.Map<IEnumerable<Post>, IEnumerable<PostResource>>(posts);
+            var postList=await _postRepository.GetAllAsync(postQueryParameter);
+            var previousPage = CreatePaginationUri(postQueryParameter, PaginationUriType.PreviousPage);
+            var nextPage = CreatePaginationUri(postQueryParameter, PaginationUriType.NextPage);
+            //分页元数据
+            var meta = new
+            {
+                PageIndex = postList.PageIndex,
+                PageSize = postList.PageSize,
+                TotalItemCount = postList.TotalItemCount,
+                PageCount = postList.PageCount,
+                PreviousPage = postList.HasPrevious?previousPage:"",
+                NextPage= postList.HasNext?nextPage:""
+            };
+            var resource = _mapper.Map<IEnumerable<Post>, IEnumerable<PostResource>>(postList);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(meta,new JsonSerializerSettings
+            {
+                ContractResolver=new CamelCasePropertyNamesContractResolver()
+            }));
+
             _logger.LogInformation("all posts...");
-            return Ok(postsResource);
+            return Ok(resource);
         }
         /// <summary>
         /// rest api 规范，单条数据有返回数据，没有返回404(not found)
@@ -69,6 +91,43 @@ namespace Blog.Host.Controllers
             _postRepository.Create(post);
             await _unitOfWork.SaveAsync();
             return Ok();
+        }
+
+        private string CreatePaginationUri(PostQueryParameter parameter, PaginationUriType paginationUriType)
+        {
+            switch (paginationUriType)
+            {
+                case PaginationUriType.PreviousPage:
+                    var previousPara=new
+                    {
+                        pageIndex = parameter.PageIndex - 1,
+                        pageSize = parameter.PageSize,
+                        orderBy = parameter.OrderBy,
+                        //?
+                        fields = parameter.Fields
+                    };
+                    return _urlhelper.Link("posts", previousPara);
+                case PaginationUriType.NextPage:
+                    var nextPara = new
+                    {
+                        pageIndex = parameter.PageIndex + 1,
+                        pageSize = parameter.PageSize,
+                        orderBy = parameter.OrderBy,
+                        //?
+                        fields = parameter.Fields
+                    };
+                    return _urlhelper.Link("posts", nextPara);
+                default:
+                    var currentPara=new
+                    {
+                        pageIndex = parameter.PageIndex,
+                        pageSize = parameter.PageSize,
+                        orderBy = parameter.OrderBy,
+                        //?
+                        fields = parameter.Fields
+                    };
+                    return _urlhelper.Link("posts", currentPara);
+            }
         }
     }
 }
