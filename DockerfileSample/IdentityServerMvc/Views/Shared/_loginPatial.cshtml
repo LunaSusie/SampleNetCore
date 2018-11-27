@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "_loginPatial";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-controller="Account" asp-action="LoginOut" method="post">
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+            <a asp-controller="Manager" asp-action="Index"> @User.Identity.Name </a>
+
+            <li>
+                <button class="btn btn-link navbar-btn navbar-link" type="submit"> 登 出 </button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a asp-controller="Account" asp-action="Register"> 注 册 </a>
+        </li>
+        <li>
+            <a asp-controller="Account" asp-action="Login"> 登 录 </a>
+        </li>
+    </ul>
+}
+
